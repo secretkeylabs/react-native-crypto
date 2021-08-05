@@ -1,9 +1,9 @@
 'use strict'
 
 import { randomBytes } from 'react-native-randombytes'
+import crypto from 'isomorphic-webcrypto'
 exports.randomBytes = exports.rng = exports.pseudoRandomBytes = exports.prng = randomBytes
 
-const crypto = require('isomorphic-webcrypto')
 
 (async () => {
   // Only needed for crypto.getRandomValues
