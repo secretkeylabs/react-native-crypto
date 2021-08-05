@@ -3,25 +3,39 @@
 import { randomBytes } from 'react-native-randombytes'
 exports.randomBytes = exports.rng = exports.pseudoRandomBytes = exports.prng = randomBytes
 
-// implement window.getRandomValues(), for packages that rely on it
-if (typeof window === 'object') {
-  if (!window.crypto) window.crypto = {}
-  if (!window.crypto.getRandomValues) {
-    window.crypto.getRandomValues = function getRandomValues (arr) {
-      let orig = arr
-      if (arr.byteLength != arr.length) {
-        // Get access to the underlying raw bytes
-        arr = new Uint8Array(arr.buffer)
-      }
-      const bytes = randomBytes(arr.length)
-      for (var i = 0; i < bytes.length; i++) {
-        arr[i] = bytes[i]
-      }
+const crypto = require('isomorphic-webcrypto')
 
-      return orig
-    }
-  }
-}
+(async () => {
+  // Only needed for crypto.getRandomValues
+  // but only wait once, future calls are secure
+  await crypto.ensureSecure();
+  const array = new Uint8Array(1);
+  crypto.getRandomValues(array);
+  const safeValue = array[0];
+
+  return array;
+})()
+
+
+// // implement window.getRandomValues(), for packages that rely on it
+// if (typeof window === 'object') {
+//   if (!window.crypto) window.crypto = {}
+//   if (!window.crypto.getRandomValues) {
+//     window.crypto.getRandomValues = function getRandomValues (arr) {
+//       let orig = arr
+//       if (arr.byteLength != arr.length) {
+//         // Get access to the underlying raw bytes
+//         arr = new Uint8Array(arr.buffer)
+//       }
+//       const bytes = randomBytes(arr.length)
+//       for (var i = 0; i < bytes.length; i++) {
+//         arr[i] = bytes[i]
+//       }
+
+//       return orig
+//     }
+//   }
+// }
 
 exports.createHash = exports.Hash = require('create-hash')
 exports.createHmac = exports.Hmac = require('create-hmac')
