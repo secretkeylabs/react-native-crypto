@@ -5,6 +5,8 @@ import crypto from 'isomorphic-webcrypto'
 exports.randomBytes = exports.rng = exports.pseudoRandomBytes = exports.prng = randomBytes
 exports.subtle = crypto.subtle
 
+console.log('isomorphic subtle: ', crypto.subtle);
+
 // implement window.getRandomValues(), for packages that rely on it
 if (typeof window === 'object') {
   if (!window.crypto) window.crypto = {}
